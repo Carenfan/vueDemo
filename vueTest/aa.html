@@ -1,0 +1,15 @@
+
+
+<div class="comment-item">
+    <a class="avatar" href="javascript:void(0);"><img :src="item.userAvatar" alt=""></a>
+    <div class="comment-main">
+        <div class="name">{{ item.nickName }}</div>
+        <div class="time">{{ item.createTime }}</div>
+        <div class="comment-content">{{ item.content }}</div>
+        <div v-if="true" class="subcomment-list">
+            <div class="comment-floor" v-for="child in item.subCommentList" v-if="item.subCommentList.length > 1" v-show="$index < 1">
+                <div class="name">{{ child.nickName }}</div>
+                <div class="comment-content">{{ child.content }}</div>
+            </div>
+            <a class="more" href="javascript:void(0);" @click="moreComment">展开更多回复</a>
+        </div>

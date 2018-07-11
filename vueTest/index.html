@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <title>Title</title>
+
+</head>
+<body>
+
+<!-- 文档结构区开始 -->
+<template>
+    <div id="comment" >
+        <UserDiv @transferUser="getInput" ></UserDiv>
+        <CommentDiv :List="List"></CommentDiv>
+        <PageDiv @transferUser="getPage" :totalCount="totalCount" :currentPage="currentPage"></PageDiv>
+    </div>
+</template>
+<!-- 文档结构区结束 -->
+<!-- js 控制区开始 -->
+
+
+<script>
+    //引入组件 commentInput、commentList、pagination
+    import UserDiv from './commentInput.vue'
+    import PageDiv from './pagination.vue'
+    import CommentDiv from './commentList.vue'
+
+    export default {
+        //声明组件名
+        name: 'comment',
+
+        //包含实例可用组件的哈希表
+        components: {
+            UserDiv,
+            PageDiv,
+            CommentDiv
+        },
+
+        //声明组件参数
+        data() {
+            return {
+                totalCount: 0,
+                currentPage: 1,
+                pagesize: 3,
+                totalData: [],
+                List: [],
+            }
+        },
+
+        methods: {
+            //显示评论列表信息的方法
+            getInput(msg) {
+                //将评论信息保存到评论数组里
+                this.totalData.push({ text: msg })
+                //计算评论信息总条数长度
+                this.totalCount = this.totalData.length
+
+                //判断评论总数是否大于单页显示条数
+                if (this.totalCount <= this.pagesize) {
+                    // 显示所有评论
+                    this.List = this.totalData
+                } else {
+                    // 截取totalData中 this.totalCount - this.pagesize 后面的元素进行显示
+                    this.List = this.totalData.slice(this.totalCount - this.pagesize)
+                }
+                //点击评论按钮，默认跳转显示第一页内容
+                this.currentPage = 1
+                //评论列表倒序显示，即最新评论，显示在最上面
+                this.List.reverse()
+
+            },
+
+            // 计算评论列表每一页的显示内容
+            getPage(curr, size) {
+                this.currentPage = curr
+
+                if (this.totalCount <= this.pagesize) {
+                    //显示所有评论
+                    this.List = this.totalData
+                } else {
+                    var start = this.totalCount - this.currentPage * this.pagesize
+                    if (start < 0) { start = 0 }
+                    // 截取totalData中 [start, start + this.pagesize] 位元素进行显示
+                    this.List = this.totalData.slice(start, start + this.pagesize)
+                }
+                //评论列表倒序显示，即最新评论，显示在最上面
+                this.List.reverse()
+            }
+        },
+    }
+</script>
+<!-- js 控制区结束 -->
+
+</body>
+</html>
